@@ -1,0 +1,12 @@
+[
+    {
+        "Ticker" : "LIQUIDBEES.NS",
+        "Qty": 10,
+        "Avg_price": 1000,
+    },
+    {
+        "Ticker" : "LIQUIDBEES.NS",
+        "Qty": 10,
+        "Avg_price": 1000,
+    }
+]

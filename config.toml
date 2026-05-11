@@ -1,0 +1,22 @@
+[assets]
+equity = [
+    "NIFTYBEES.NS",
+    "JUNIORBEES.NS",
+    "MID150BEES.NS",
+    "BANKBEES.NS",
+    "PHARMABEES.NS",
+    "AUTOBEES.NS",
+    "PSUBNKBEES.NS",
+    "GOLDBEES.NS",
+    "SILVERBEES.NS",
+    "LTGILTBEES.NS",
+    "TECH.NS",
+    "MON100.NS"
+]
+
+[meta]
+N_TOP = 3
+MOMENTUM = 100
+FREQUENCY = "M"
+SAFE_ASSET = "LIQUIDBEES.NS"
+INIT_CASH = 10000

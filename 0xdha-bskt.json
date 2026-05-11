@@ -1,0 +1,90 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Zerodha Safe Delivery Basket Payload",
+  "description": "A restricted schema allowing ONLY CNC Delivery and Market/Limit orders.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "weight": {
+        "type": "integer",
+        "description": "Execution sequence of the order (0, 1, 2, etc.)",
+        "minimum": 0
+      },
+      "instrument": {
+        "type": "object",
+        "properties": {
+          "tradingsymbol": {
+            "type": "string",
+            "description": "Trading symbol of the instrument (e.g., HDFCBANK)"
+          },
+          "exchange": {
+            "type": "string",
+            "enum": ["NSE", "BSE"],
+            "description": "Exchange segment (Restricted to Equity)"
+          }
+        },
+        "required": ["tradingsymbol", "exchange"],
+        "additionalProperties": false
+      },
+      "params": {
+        "type": "object",
+        "properties": {
+          "transactionType": {
+            "type": "string",
+            "enum": ["BUY", "SELL"],
+            "description": "Transaction type"
+          },
+          "orderType": {
+            "type": "string",
+            "enum": ["MARKET", "LIMIT"],
+            "description": "Restricted: Only Market or Limit orders allowed"
+          },
+          "product": {
+            "type": "string",
+            "enum": ["CNC"],
+            "description": "Restricted: Only Cash and Carry (Delivery) allowed"
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Quantity to transact"
+          },
+          "price": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Price for LIMIT orders (0 for MARKET)"
+          },
+          "triggerPrice": {
+            "type": "number",
+            "enum": [0],
+            "description": "Forced to 0 since SL/SL-M orders are disabled"
+          },
+          "validity": {
+            "type": "string",
+            "enum": ["DAY"],
+            "description": "Restricted: Only DAY validity allowed"
+          },
+          "variety": {
+            "type": "string",
+            "enum": ["regular", "amo"],
+            "description": "Restricted: Standard or After Market Orders only"
+          }
+        },
+        "required": [
+          "transactionType",
+          "orderType",
+          "product",
+          "quantity",
+          "price",
+          "triggerPrice",
+          "validity",
+          "variety"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "required": ["weight", "instrument", "params"],
+    "additionalProperties": false
+  }
+}
