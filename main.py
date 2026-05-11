@@ -20,9 +20,10 @@ def main():
         meta["N_TOP"], etfs, meta["SAFE_ASSET"], meta["MOMENTUM"], meta["FREQUENCY"]
     )
 
-    res = acr.strategy()
+    res = acr.rebalance("0xdha-holdings.json", free_cash=meta["INIT_CASH"])
+    basket = acr.export_to_zerodha_basket(res)
 
-    print(res)
+    print(basket)
 
 
 if __name__ == "__main__":

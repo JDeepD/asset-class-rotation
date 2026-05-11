@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 from pathlib import Path
 import math
+import json
 
 import pandas as pd
 
@@ -31,7 +32,9 @@ class AssetClassRotation:
         if self.momentum <= 0:
             raise ValueError(f"Invalid momentum: {self.momentum}.")
 
-    def export_to_zerodha_basket(self, orders_df: pd.DataFrame):
+    def export_to_zerodha_basket(
+        self, orders_df: pd.DataFrame, file_path: str = "zerodha_basket.json"
+    ):
         basket = []
         if orders_df.empty:
             return basket
@@ -53,6 +56,13 @@ class AssetClassRotation:
                 },
             }
             basket.append(order)
+
+        try:
+            with open(file_path, "w") as outfile:
+                json.dump(basket, outfile, indent=2)
+
+        except IOError as e:
+            raise IOError(f"Error saving Zerodha basket to file: {e}")
 
         return basket
 
