@@ -2,6 +2,9 @@ import os
 import resend
 from dotenv import load_dotenv
 from typing import List, Optional, Dict, Any
+import base64
+import json
+from datetime import datetime
 
 load_dotenv()
 resend.api_key = os.getenv("RESEND_API_KEY")
@@ -39,6 +42,16 @@ def send_email(
     except Exception as e:
         print(f"Error sending email via Resend: {e}")
         return {"error": str(e)}
+
+
+def send_zerodha_basket_mail(basket, to: List[str]):
+    subject = f"Zerodha Rebalance Basket - {datetime.today().strftime('%Y-%m-%d')}"
+    content = "<h1>PFA: Rebalance Basket</h1>"
+    attachment = {
+        "filename": subject + ".json",
+        "content": base64.b64encode(json.dumps(basket, indent=2).encode()).decode(),
+    }
+    send_email(to, subject, content, attachments=[attachment])
 
 
 if __name__ == "__main__":

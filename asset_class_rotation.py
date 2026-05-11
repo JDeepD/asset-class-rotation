@@ -3,7 +3,6 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 from pathlib import Path
 import math
-import json
 
 import pandas as pd
 
@@ -56,13 +55,6 @@ class AssetClassRotation:
                 },
             }
             basket.append(order)
-
-        try:
-            with open(file_path, "w") as outfile:
-                json.dump(basket, outfile, indent=2)
-
-        except IOError as e:
-            raise IOError(f"Error saving Zerodha basket to file: {e}")
 
         return basket
 
@@ -175,7 +167,6 @@ class AssetClassRotation:
         end_prices = prices.iloc[-1]
 
         self._latest_prices = end_prices
-        print(self._latest_prices)
 
         momentum_scores = (end_prices / start_prices) - 1
         top_assets = momentum_scores.sort_values(ascending=False).head(self.n_top)
