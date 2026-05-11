@@ -21,9 +21,7 @@ def main():
     etfs = config["assets"]["equity"]
     meta = config["meta"]
 
-    acr = AssetClassRotation(
-        meta["N_TOP"], etfs, meta["SAFE_ASSET"], meta["MOMENTUM"], meta["FREQUENCY"]
-    )
+    acr = AssetClassRotation(meta["N_TOP"], etfs, meta["SAFE_ASSET"], meta["MOMENTUM"])
 
     res = acr.rebalance("0xdha-holdings.json", free_cash=meta["INIT_CASH"])
     basket = acr.export_to_zerodha_basket(res)

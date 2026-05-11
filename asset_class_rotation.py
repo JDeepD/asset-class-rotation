@@ -13,11 +13,8 @@ class AssetClassRotation:
     assets: list[str]
     safe_asset: str
     momentum: int
-    freq: str
 
     def __post_init__(self) -> None:
-        if self.freq not in ["D", "W", "M", "Y"]:
-            raise ValueError(f"Invalid Frequency: {self.freq}")
 
         if not self.assets:
             raise ValueError("Assets list cannot be empty.")
