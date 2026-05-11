@@ -1,0 +1,33 @@
+name: "Rebalance"
+
+on:
+  schedule:
+    - cron: "0 16 1 * *"
+      timezone: "Asia/Kolkata"
+      
+  workflow_dispatch:
+    
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - uses: astral-sh/setup-uv@v8.1.0
+        with:
+          enable-cache: true
+
+      - name: Setup Python
+        run: uv python install 3.14
+
+      - name: Setup deps
+        run: uv sync --frozen
+        
+      - name: Run script
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          TO_EMAIL: ${{ secrets.TO_EMAIL }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: uv run main.py
