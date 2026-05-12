@@ -2,6 +2,8 @@ import base64
 import json
 import os
 from datetime import datetime
+from zoneinfo import ZoneInfo
+from zoneinfo import ZoneInfo
 from typing import Any, Dict, List, Optional
 
 import resend
@@ -51,7 +53,7 @@ def send_email(
 
 
 def send_zerodha_basket_mail(basket: List[Dict[str, Any]], to: List[str]) -> None:
-    subject = f"Zerodha Rebalance Basket - {datetime.today().strftime('%Y-%m-%d')}"
+    subject = f"Zerodha Rebalance Basket - {datetime.now(tz=ZoneInfo('Asia/Kolkata')).strftime('%Y-%m-%d')}"
     repo = os.getenv("GITHUB_REPOSITORY", "JDeepD/asset-class-rotation")
     content = f'<h1>PFA: Rebalance Basket</h1><p>Once orders are placed, update your current holdings here: <a href="https://github.com/{repo}/issues/new?template=basket_order.yml">Update Holdings</a></p>'
     attachment = {
