@@ -1,13 +1,17 @@
-import os
-import resend
-from dotenv import load_dotenv
-from typing import List, Optional, Dict, Any
 import base64
 import json
+import os
 from datetime import datetime
+from typing import Any, Dict, List, Optional
 
-load_dotenv()
-resend.api_key = os.getenv("RESEND_API_KEY")
+import resend
+
+
+def _ensure_api_key() -> None:
+    if not resend.api_key:
+        from dotenv import load_dotenv
+        load_dotenv()
+        resend.api_key = os.getenv("RESEND_API_KEY")
 
 
 def send_email(
@@ -18,6 +22,8 @@ def send_email(
     text_content: Optional[str] = None,
     attachments: Optional[List[Dict[str, Any]]] = None,
 ) -> Dict[str, Any]:
+    _ensure_api_key()
+
     if not resend.api_key:
         raise ValueError(
             "RESEND_API_KEY environment variable is not set or couldn't be loaded."
@@ -44,24 +50,12 @@ def send_email(
         return {"error": str(e)}
 
 
-def send_zerodha_basket_mail(basket, to: List[str]):
+def send_zerodha_basket_mail(basket: List[Dict[str, Any]], to: List[str]) -> None:
     subject = f"Zerodha Rebalance Basket - {datetime.today().strftime('%Y-%m-%d')}"
-    content = '<h1>PFA: Rebalance Basket</h1><p>Once orders are placed, update your current holdings here: <a href="https://github.com/JDeepD/asset-class-rotation/issues/new?template=basket_order.yml">Update Holdings</a></p>'
+    repo = os.getenv("GITHUB_REPOSITORY", "JDeepD/asset-class-rotation")
+    content = f'<h1>PFA: Rebalance Basket</h1><p>Once orders are placed, update your current holdings here: <a href="https://github.com/{repo}/issues/new?template=basket_order.yml">Update Holdings</a></p>'
     attachment = {
         "filename": subject + ".json",
         "content": base64.b64encode(json.dumps(basket, indent=2).encode()).decode(),
     }
     send_email(to, subject, content, attachments=[attachment])
-
-
-if __name__ == "__main__":
-    result = send_email(
-        to_emails=["jaydeepjd.1125@gmail.com"],
-        subject="Welcome to the platform!",
-        html_content="<h1>Hello!</h1><p>Thanks for signing up.</p>",
-    )
-
-    if "error" in result:
-        print("Failed to send email.")
-    else:
-        print(f"Email sent successfully! Response: {result}")

@@ -1,17 +1,1 @@
-[
-    {
-        "Ticker": "GOLDBEES.NS",
-        "Qty": 10,
-        "Avg_price": 1000
-    },
-    {
-        "Ticker": "LIQUIDBEES.NS",
-        "Qty": 10,
-        "Avg_price": 1000
-    },
-    {
-        "Ticker": "TECH.NS",
-        "Qty": 5,
-        "Avg_price": 100
-    }
-]
+[ ]
