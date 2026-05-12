@@ -46,7 +46,7 @@ def send_email(
 
 def send_zerodha_basket_mail(basket, to: List[str]):
     subject = f"Zerodha Rebalance Basket - {datetime.today().strftime('%Y-%m-%d')}"
-    content = "<h1>PFA: Rebalance Basket</h1>"
+    content = '<h1>PFA: Rebalance Basket</h1><p>Once orders are placed, update your current holdings here: <a href="https://github.com/JDeepD/asset-class-rotation/issues/new?template=basket_order.yml">Update Holdings</a></p>'
     attachment = {
         "filename": subject + ".json",
         "content": base64.b64encode(json.dumps(basket, indent=2).encode()).decode(),

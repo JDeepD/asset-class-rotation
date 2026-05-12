@@ -1,6 +1,5 @@
 name: Parse holdings to JSON
 
-
 on:
   issues:
     types: [opened, edited]
