@@ -1,6 +1,6 @@
 # Asset Class Rotation
 
-Momentum-based ETF rotation bot. Ranks Indian ETFs by price momentum, generates Zerodha basket orders, and emails them monthly — all automated via GitHub Actions.
+Momentum-based ETF rotation. Ranks Indian ETFs by price momentum, generates Zerodha basket orders, and emails them monthly — all automated via GitHub Actions.
 
 ## How It Works
 
@@ -9,6 +9,9 @@ Momentum-based ETF rotation bot. Ranks Indian ETFs by price momentum, generates 
 3. Picks the top N performers
 4. Computes BUY/SELL orders by diffing against your current holdings
 5. Exports orders to Zerodha basket JSON and emails it
+
+<img width="870" height="614" alt="diag" src="https://github.com/user-attachments/assets/a2fdd1d0-acf9-4655-8582-398c407d75b8" />
+
 
 ## Getting Started
 
@@ -31,13 +34,13 @@ Edit `config.toml` in your fork:
 
 ```toml
 [assets]
-equity = ["NIFTYBEES.NS", "GOLDBEES.NS", ...]
+equity = ["NIFTYBEES.NS", "GOLDBEES.NS" ]
 
 [meta]
-N_TOP = 3          # number of top ETFs to hold
-MOMENTUM = 100     # lookback window in days
+N_TOP = 3
+MOMENTUM = 100
 SAFE_ASSET = "LIQUIDBEES.NS"
-INIT_CASH = 10000  # initial cash for fresh portfolios
+INIT_CASH = 10000
 ```
 
 ### 4. Submit your holdings
@@ -45,8 +48,9 @@ INIT_CASH = 10000  # initial cash for fresh portfolios
 (If not starting out fresh)
 
 In your fork, create a new issue using the **Submit Holdings** template. Enter your holdings as a CSV list:
+```csv
+# TICKER(in yfinance format), Qty, Avg_Price
 
-```
 GOLDBEES.NS, 10, 1000
 LIQUIDBEES.NS, 5, 500
 ```
@@ -60,11 +64,17 @@ You can also trigger it manually from the **Actions** tab.
 
 You will receive a JSON file over your email at configured `TO_EMAIL`.
 
-Navigate to Kite > Orders > Baskets > Create new basket.
+## Navigate to Kite > Orders > Baskets > Create new basket.
+<img width="1000" alt="Screenshot 2026-05-12 at 3 19 33 PM" src="https://github.com/user-attachments/assets/676b2474-0892-48e6-8a58-55d4ea96a72c" />
 
-Click on the upload button to upload a new basket and upload the JSON file.
 
-Verify the orders manually and click on execute.
+## Click on the upload button to upload a new basket and upload the JSON file.
+<img width="1710" height="914" alt="Screenshot 2026-05-12 at 3 24 26 PM" src="https://github.com/user-attachments/assets/eca8b8d7-10d7-4e6c-a7c7-2187edf7d2ff" />
+
+
+## Verify the orders manually and click on execute.
+<img width="1037" height="550" alt="image" src="https://github.com/user-attachments/assets/b2381a5f-5c4b-41fa-b782-d77c297187ed" />
+
 
 ## Updating Holdings
 
