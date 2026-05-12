@@ -22,12 +22,20 @@ def compute_orders(
             total_holdings_value += qty * prices.get(ticker, 0)
 
     total_equity = free_cash + total_holdings_value
-    target_capital_per_asset = total_equity / n_top
+    per_slot_capital = total_equity / n_top
+
+    target_quantities: Dict[str, float] = {}
+    for ticker in target_tickers:
+        price = prices.get(ticker, 0)
+        if price <= 0:
+            continue
+        target_quantities[ticker] = target_quantities.get(ticker, 0) + per_slot_capital / price
 
     orders = []
 
+    target_set = set(target_quantities.keys())
     for ticker, qty in current_holdings.items():
-        if ticker not in target_tickers:
+        if ticker not in target_set:
             orders.append(
                 {
                     "Ticker": ticker,
@@ -37,11 +45,8 @@ def compute_orders(
                 }
             )
 
-    for ticker in target_tickers:
-        current_price = prices.get(ticker)
-        if current_price is None or current_price <= 0:
-            continue
-        target_qty = math.floor(target_capital_per_asset / current_price)
+    for ticker, target_qty_float in target_quantities.items():
+        target_qty = math.floor(target_qty_float)
         current_qty = current_holdings.get(ticker, 0)
         delta = target_qty - current_qty
         if delta > 0:

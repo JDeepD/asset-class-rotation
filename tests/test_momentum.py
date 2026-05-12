@@ -1,5 +1,5 @@
 import pandas as pd
-from acr.momentum import latest_prices, rank_by_momentum
+from acr.momentum import latest_prices, rank_by_momentum, select_targets
 
 
 def _make_prices(closes: dict) -> pd.DataFrame:
@@ -44,3 +44,32 @@ def test_latest_prices():
 
     assert result["A"] == 30
     assert result["B"] == 15
+
+
+def test_select_targets_all_positive():
+    momentum_df = pd.DataFrame([
+        {"Ticker": "A", "Momentum": 0.05},
+        {"Ticker": "B", "Momentum": 0.03},
+    ])
+    targets = select_targets(momentum_df, safe_asset="SAFE")
+    assert targets == ["A", "B"]
+
+
+def test_select_targets_some_negative():
+    momentum_df = pd.DataFrame([
+        {"Ticker": "A", "Momentum": 0.05},
+        {"Ticker": "B", "Momentum": -0.02},
+        {"Ticker": "C", "Momentum": 0.03},
+    ])
+    targets = select_targets(momentum_df, safe_asset="SAFE")
+    assert targets == ["A", "SAFE", "C"]
+
+
+def test_select_targets_all_negative():
+    momentum_df = pd.DataFrame([
+        {"Ticker": "A", "Momentum": -0.05},
+        {"Ticker": "B", "Momentum": -0.03},
+        {"Ticker": "C", "Momentum": -0.01},
+    ])
+    targets = select_targets(momentum_df, safe_asset="SAFE")
+    assert targets == ["SAFE", "SAFE", "SAFE"]
