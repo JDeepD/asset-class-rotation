@@ -1,0 +1,15 @@
+name: Submit Holdings
+description: Add your portfolio holdings
+labels: ["update-holdings"]
+body:
+  - type: textarea
+    id: holdings_data
+    attributes:
+      label: Portfolio Holdings
+      description: |
+        Desc: Enter holdings one per line in this exact format: **TICKER, Quantity, Average Price**
+      value: |
+        GOLDBEES.NS, 10, 1000
+        LIQUIDBEES.NS, 10, 1000
+    validations:
+      required: true

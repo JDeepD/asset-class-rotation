@@ -1,0 +1,70 @@
+name: Parse holdings to JSON
+
+
+on:
+  issues:
+    types: [opened, edited]
+    
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  update-json:
+    if: contains(github.event.issue.labels.*.name, 'update-holdings')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Parse issue body
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const body = context.payload.issue.body;
+            const lines = body.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+            const holdings = []
+            for (const line of lines) {
+              if (line.startsWith('#') || line.includes('Desc:')) continue;
+                const parts = line.split(',');
+                if (parts.length != 3) continue;
+                
+                const ticker = parts[0].trim();
+                const qty = parseFloat(parts[1].trim())
+                const avg_price = parseFloat(parts[2].trim())
+
+                if (isNaN(qty) || isNaN(avg_price)) continue;
+              
+                holdings.push({
+                  Ticker: ticker,
+                  Qty: qty,
+                  Avg_price: avg_price
+                })
+            }
+            fs.writeFileSync('0xdha-holdings.json', JSON.stringify(holdings, null, 4));
+            
+      - name: Commit and Push Changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update 0xdha-holdings.json from Issue #${{ github.event.issue.number }}"
+          file_pattern: '0xdha-holdings.json'
+
+      - name: Comment with updated data
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const rawData = fs.readFileSync('0xdha-holdings.json', 'utf8');
+            const holdings = JSON.parse(rawData);
+            
+            let commentBody = `### Holdings Successfully Updated!\n\n`;
+            commentBody += `Here is the latest data committed to the repository:\n\n`;
+            commentBody += `\`\`\`json\n${JSON.stringify(holdings, null, 2)}\n\`\`\``;
+            
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: commentBody
+            });
