@@ -34,7 +34,7 @@ def main() -> None:
 
     basket = to_basket(orders_df)
     to_email = os.getenv("TO_EMAIL")
-    send_zerodha_basket_mail(basket, [to_email])
+    send_zerodha_basket_mail(basket, orders_df, momentum_df, prices, [to_email])
 
 
 if __name__ == "__main__":
